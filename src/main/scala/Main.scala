@@ -15,7 +15,9 @@ object Main extends App with HealthRoutes {
   val settings = Settings(system)
 
   val logger = Logging(system, getClass)
-  
+
+  val routes = logRequestResult("", InfoLevel)(healthRoutes)
+
   Http().bindAndHandle(routes, settings.Http.interface, settings.Http.port) map { binding =>
     logger.info(s"Server started on port {}", binding.localAddress.getPort)
   } recoverWith { case _ => system.terminate() }
